@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Contracts</title>
+		<script
+			type="text/javascript"
+			src="https://cdnjs.cloudflare.com/ajax/libs/web3/1.2.7-rc.0/web3.min.js"
+		></script>
+		<style>
+			body {
+				background-color: khaki;
+				text-align: center;
+			}
+			button {
+				background-color: slateblue;
+				font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
+					"Lucida Sans", Arial, sans-serif;
+				font-size: 33px;
+				border: none;
+				border-radius: 1rem;
+				padding: 10px;
+				color: rgb(255, 255, 255);
+			}
+			button:hover {
+				background-color: rgb(86, 66, 209);
+			}
+
+			input {
+				height: 3rem;
+				border-radius: 1rem;
+				border: none;
+				margin: 10px;
+				padding: 5px;
+				width: 50vw;
+				font-size: 1.3rem;
+				background-color: rgb(50, 50, 50);
+				color: white;
+			}
+
+			::placeholder {
+				/*placeholder color*/
+				color: white;
+				opacity: 1; /* Firefox */
+			}
+
+
+		</style>
+	</head>
+	<body>
+		<div
+			style="
+				display: flex;
+				flex-direction: column;
+				justify-content: center;
+				align-items: center;
+			"
+		>
+			<div>
+				<img
+					src="https://uxwing.com/wp-content/themes/uxwing/download/brands-and-social-media/metamask-icon.png"
+					alt="Metamask-logo"
+					width="200px"
+				/>
+				<br />
+				<br />
+				<button onclick="Connect_Wallet()">Connect To Wallet</button>
+				<br />
+				<div style="margin-top: 1rem">
+					<span
+						style="
+							font-size: 1.2rem;
+							font-weight: 900;
+							font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande',
+								'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+						"
+						>Account : </span
+					><span
+						id="AccountId"
+						style="
+							background-color: indianred;
+							font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande',
+								'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+							border-radius: 0.5rem;
+							padding: 10px;
+						"
+						>NOT CONNECTED TO WALLET</span
+					>
+				</div>
+			</div>
+
+			<div
+				style="
+					border: 2px solid rgb(50, 50, 50);
+					padding: 1rem;
+					margin-top: 2rem;
+					width: 50vw;
+					text-align: center;
+					border-radius: 1rem;
+				"
+			>
+				<button onclick="Connect_SmartContract()">Connect To Contract</button>
+				<br />
+				<span
+					id="Status"
+					style="
+						color: red;
+						font-family: Verdana, Geneva, Tahoma, sans-serif;
+						font-size: 1.2rem;
+						padding: 2rem;
+						text-align: center;
+					"
+					>Not Connected</span
+				>
+			</div>
+
+			<div
+				style="
+					border: 2px solid black;
+					width: 53vw;
+					margin-top: 1rem;
+					border-radius: 1rem;
+				"
+			>
+				<!-- create event -->
+				<div
+					style="
+						display: flex;
+						flex-direction: column;
+						padding: 10px;
+						gap: 0.5rem;
+					"
+				>
+					<input type="text" id="eventName" placeholder="Event Name" />
+					<input type="date" id="eventDate" placeholder="Event Date" />
+					<input type="time" id="eventTime" placeholder="Event Time" />
+					<input type="text" id="eventLocation" placeholder="Event Location" />
+					<input type="text" id="relatedSport" placeholder="Related Sport" />
+					<input
+						type="number"
+						id="maxParticipants"
+						placeholder="Max Participants"
+					/>
+					<button style="margin-top: 1rem; width: 30vw; margin-left: 10rem;" onclick="Create_Event()">
+						Create Event
+					</button>
+				</div>
+
+				<h3 id="eventCreated_Status" style="margin: 1rem"></h3>
+
+			</div>
+		
+
+		<!-- join event -->
+		<div
+			style="
+				border: 2px solid black;
+				width: 53vw;
+				margin-top: 1rem;
+				border-radius: 1rem;
+			"
+		>
+			<input
+				style="
+					height: 3rem;
+					border-radius: 1rem;
+					border: none;
+					margin: 10px;
+					padding: 5px;
+					width: 40vw;
+				"
+				type="text"
+				id="eventName"
+				placeholder="Event Name"
+			/>
+
+            <button style="margin-top: 1rem; width: 30vw; margin-left: 2rem;" onclick="Join_Event()">
+                Join Event
+            </button>
+            <h3 id="JoinEvent_Status" style="margin: 1rem"></h3>
+		</div>
+
+        <!-- leave event -->
+        <div
+            style="
+                border: 2px solid black;
+                width: 53vw;
+                margin-top: 1rem;
+                border-radius: 1rem;
+            "
+        >
+            <input
+                style="
+                    height: 3rem;
+                    border-radius: 1rem;
+                    border: none;
+                    margin: 10px;
+                    padding: 5px;
+                    width: 40vw;
+                "
+                type="text"
+                id="eventName"
+                placeholder="Event Name"
+            />
+
+            <button style="margin-top: 1rem; width: 30vw; margin-left: 2rem;" onclick="Leave_Event()">
+                Leave Event
+            </button>
+            <h3 id="LeaveEvent_Status" style="margin: 1rem"></h3>
+            </div>
+
+        <!-- update event status -->
+        <div
+            style="
+                border: 2px solid black;
+                width: 53vw;
+                margin-top: 1rem;
+                border-radius: 1rem;
+            "
+        >
+            <input
+                style="
+                    height: 3rem;
+                    border-radius: 1rem;
+                    border: none;
+                    margin: 10px;
+                    padding: 5px;
+                    width: 40vw;
+                "
+                type="text"
+                id="eventName"
+                placeholder="Event Name"
+            />
+           
+            <input
+                style="
+                    height: 3rem;
+                    border-radius: 1rem;
+                    border: none;
+                    margin: 10px;
+                    padding: 5px;
+                    width: 40vw;
+                "
+                type="number"
+                id="eventStatus"
+                placeholder="Event Status"
+            />
+            <ul type = "none" style="font-size: 1.2rem;">
+                <li>0 : Event Created</li>
+                <li>1 : Event Started</li>
+                <li>2 : Event Ended</li>
+            </ul>
+
+            <button style="margin-top: 1rem; width: 30vw; margin-left: 2rem;" onclick="Update_Event_Status()">
+                Update Event Status
+            </button>
+            <h3 id="UpdateEvent_Status" style="margin: 1rem"></h3>
+            </div>
+
+        <!-- get event details -->
+        <div
+            style="
+                border: 2px solid black;
+                width: 53vw;
+                margin-top: 1rem;
+                border-radius: 1rem;
+            "
+        >
+            <input
+                style="
+                    height: 3rem;
+                    border-radius: 1rem;
+                    border: none;
+                    margin: 10px;
+                    padding: 5px;
+                    width: 40vw;
+                "
+                type="text"
+                id="eventName"
+                placeholder="Event Name"
+            />
+
+            <button style="margin-top: 1rem; width: 30vw; margin-left: 2rem;" onclick="Get_Event_Details()">
+                Get Event Details
+            </button>
+            <table border="1px" id="table" style="display: none; margin-left: 0.5rem; border-radius: 1rem; margin-top: 1rem; background-color: rgb(36, 36, 36); color:white; font-size: 1.2rem; font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;">
+                <tr>
+                    <th>Event Name</th>
+                    <th>Event Date</th>
+                    <th>Event Time</th>
+                    <th>Event Location</th>
+                    <th>Related Sport</th>
+                    <th>Max Participants</th>
+                </tr>
+                <tr>
+                    <td id="EventName"></td>
+                    <td id="EventDate"></td>
+                    <td id="EventTime"></td>
+                    <td id="EventLocation"></td>
+                    <td id="RelatedSport"></td>
+                    <td id="MaxParticipants"></td>
+                </tr>
+            </table>
+
+            </div>
+
+
+
+
+        </div>
+
+		<script>
+			// user account
+			let account;
+			const Connect_Wallet = () => {
+				if (window.ethereum) {
+					window.ethereum
+						.request({ method: "eth_requestAccounts" })
+						.then((accounts) => {
+							account = accounts[0];
+							document.getElementById("AccountId").innerText = accounts[0];
+							document.getElementById("AccountId").style.backgroundColor =
+								"#b5ff61";
+						})
+						.catch((err) => {
+							console.log(err);
+						});
+				} else {
+					alert("Install Metamask");
+				}
+			};
+
+			const Connect_SmartContract = async () => {
+				const ABI = [
+					{
+						inputs: [
+							{
+								internalType: "string",
+								name: "Event_Name",
+								type: "string",
+							},
+							{
+								internalType: "string",
+								name: "Date",
+								type: "string",
+							},
+							{
+								internalType: "string",
+								name: "Timing",
+								type: "string",
+							},
+							{
+								internalType: "string",
+								name: "Location",
+								type: "string",
+							},
+							{
+								internalType: "string",
+								name: "Related_Sport",
+								type: "string",
+							},
+							{
+								internalType: "uint256",
+								name: "Max_participation",
+								type: "uint256",
+							},
+						],
+						name: "createEvent",
+						outputs: [],
+						stateMutability: "nonpayable",
+						type: "function",
+					},
+					{
+						anonymous: false,
+						inputs: [
+							{
+								indexed: true,
+								internalType: "string",
+								name: "Name",
+								type: "string",
+							},
+							{
+								indexed: false,
+								internalType: "uint256",
+								name: "timestamp",
+								type: "uint256",
+							},
+							{
+								indexed: true,
+								internalType: "string",
+								name: "sportsName",
+								type: "string",
+							},
+							{
+								indexed: false,
+								internalType: "bytes32",
+								name: "eventid",
+								type: "bytes32",
+							},
+						],
+						name: "EventCreated",
+						type: "event",
+					},
+					{
+						inputs: [
+							{
+								internalType: "string",
+								name: "EventName",
+								type: "string",
+							},
+						],
+						name: "JoinEvent",
+						outputs: [],
+						stateMutability: "nonpayable",
+						type: "function",
+					},
+					{
+						inputs: [
+							{
+								internalType: "string",
+								name: "EventName",
+								type: "string",
+							},
+						],
+						name: "LeaveEvent",
+						outputs: [],
+						stateMutability: "nonpayable",
+						type: "function",
+					},
+					{
+						inputs: [
+							{
+								internalType: "string",
+								name: "EventName",
+								type: "string",
+							},
+							{
+								internalType: "uint256",
+								name: "eventStatus",
+								type: "uint256",
+							},
+						],
+						name: "update_Event_Status",
+						outputs: [],
+						stateMutability: "nonpayable",
+						type: "function",
+					},
+					{
+						inputs: [
+							{
+								internalType: "string",
+								name: "EventName",
+								type: "string",
+							},
+						],
+						name: "getEventDetails",
+						outputs: [
+							{
+								components: [
+									{
+										internalType: "string",
+										name: "EventName",
+										type: "string",
+									},
+									{
+										internalType: "string",
+										name: "Date",
+										type: "string",
+									},
+									{
+										internalType: "string",
+										name: "Time",
+										type: "string",
+									},
+									{
+										internalType: "string",
+										name: "Location",
+										type: "string",
+									},
+									{
+										internalType: "string",
+										name: "SportName",
+										type: "string",
+									},
+									{
+										internalType: "address",
+										name: "OrganiserId",
+										type: "address",
+									},
+									{
+										internalType: "bytes32",
+										name: "EventId",
+										type: "bytes32",
+									},
+									{
+										internalType: "string",
+										name: "Status",
+										type: "string",
+									},
+									{
+										internalType: "address[]",
+										name: "participant",
+										type: "address[]",
+									},
+									{
+										internalType: "uint256",
+										name: "MAX_PARTICIPANTS_LIMIT",
+										type: "uint256",
+									},
+									{
+										internalType: "uint256",
+										name: "Participants_WaitingList",
+										type: "uint256",
+									},
+								],
+								internalType: "struct Events.EventDetails",
+								name: "",
+								type: "tuple",
+							},
+						],
+						stateMutability: "view",
+						type: "function",
+					},
+				];
+
+				if (window.ethereum != "undefined") {
+					const contractAddress = "0x1b95588507A764B7bdB1CdA47ccCF832F0b1CC67";
+					window.web3 = await new Web3(window.ethereum);
+					window.contract = await new window.web3.eth.Contract(
+						ABI,
+						contractAddress
+					);
+					document.getElementById("Status").innerText =
+						"Connected to : " + window.contract._address;
+					document.getElementById("Status").style.color = "green";
+				} else {
+					alert("Install Metamask");
+				}
+			};
+
+			const Create_Event = async () => {
+				const eventName = document.getElementById("eventName").value;
+				const eventDate = document.getElementById("eventDate").value;
+				const eventTime = document.getElementById("eventTime").value;
+				const eventLocation = document.getElementById("eventLocation").value;
+				const relatedSport = document.getElementById("relatedSport").value;
+				const maxParticipants =
+					document.getElementById("maxParticipants").value;
+
+				await window.contract.methods
+					.createEvent(
+						eventName,
+						eventDate,
+						eventTime,
+						eventLocation,
+						relatedSport,
+						maxParticipants
+					)
+					.send({ from: account })
+					.on("receipt", (receipt) => {
+						console.log(receipt);
+						document.getElementById("eventCreated_Status").innerText =
+							"Event Created Successfully";
+					});
+				// console.log(eventName, eventDate, eventTime, eventLocation, relatedSport, maxParticipants);
+			};
+
+
+            const Join_Event = async () =>
+            {
+                const eventName = document.getElementById("eventName").value;
+                await window.contract.methods.JoinEvent(eventName).send({from : account}).on("receipt", (receipt) => {
+                    console.log(receipt);
+                    document.getElementById("JoinEvent_Status").innerText = "Event Joined Successfully";
+                });
+            }
+
+            const Leave_Event = async () =>
+            {
+                const eventName = document.getElementById("eventName").value;
+                await window.contract.methods.LeaveEvent(eventName).send({from : account}).on("receipt", (receipt) => {
+                    console.log(receipt);
+                    document.getElementById("JoinEvent_Status").innerText = "Event Left Successfully";
+                });
+            }
+
+            const Update_Event_Status = async () =>
+            {
+                const eventName = document.getElementById("eventName").value;
+                const eventStatus = document.getElementById("eventStatus").value;
+                await window.contract.methods.update_Event_Status(eventName, eventStatus).send({from : account}).on("receipt", (receipt) => {
+                    console.log(receipt);
+                    document.getElementById("JoinEvent_Status").innerText = "Event Status Updated Successfully";
+                });
+            }
+
+            const Get_Event_Details = async () =>
+            {
+                const eventName = document.getElementById("eventName").value;
+                const eventDetails = await window.contract.methods.getEventDetails(eventName).call();
+                document.getElementById("table").style.display = "block";
+                document.getElementById("EventName").innerText = eventDetails.EventName;
+                document.getElementById("EventDate").innerText = eventDetails.Date;
+                document.getElementById("EventTime").innerText = eventDetails.Time;
+                document.getElementById("EventLocation").innerText = eventDetails.Location;
+                document.getElementById("RelatedSport").innerText = eventDetails.SportName;
+                document.getElementById("MaxParticipants").innerText = eventDetails.MAX_PARTICIPANTS_LIMIT;
+            }
+		</script>
+	</body>
+</html>
